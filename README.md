@@ -1,4 +1,4 @@
-# first-sam-app
+# sam-task-api
 
 To build and deploy this application locally, run the following in your shell in the root of the project:
 
@@ -9,4 +9,9 @@ sam build
 sam local start-api --env-vars local-environment/env.json
 ```
 
+To build and deploy this application on your own AWS Account, run the following in your shell: ( You will need to have a AWS Cli configured. )
+
+```bash
+sam build
 sam deploy --stack-name TasksApi --resolve-s3 --capabilities CAPABILITY_IAM
+```

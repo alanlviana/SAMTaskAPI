@@ -1,0 +1,115 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Task API Template
+
+Parameters:
+  TaskTableName:
+    Type: String
+    Description: The DynamoDB table for storing Task information.
+    Default: 'TaskTable'
+
+  RegionName:
+    Type: String
+    Description: Default region for deployment.
+    Default: 'us-east-1'
+
+  AwsEnvName:
+    Type: String
+    Description: AWS Environment where code is being executed (AWS_SAM_LOCAL or AWS).
+    Default: 'AWS'
+    AllowedValues:
+      - AWS
+      - AWS_SAM_LOCAL
+
+Globals:
+  Function:
+    Timeout: 10
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref TaskTableName
+        REGION_NAME: !Ref AWS::Region
+        AWS_ENV: !Ref AwsEnvName
+
+
+
+
+Resources:
+  GetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/TaskAPI/
+      Handler: TaskAPI::TaskAPI.Functions.GetFunction::FunctionHandler
+      Runtime: dotnetcore3.1
+      Architectures:
+        - x86_64
+      MemorySize: 256
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TaskTableName
+      Events:
+        GetTask:
+          Type: Api 
+          Properties:
+            Path: /task
+            Method: get
+
+  PostFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./src/TaskAPI/
+      Handler: TaskAPI::TaskAPI.Functions.PostFunction::FunctionHandler
+      Runtime: dotnetcore3.1
+      Architectures:
+        - x86_64
+      MemorySize: 256
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TaskTableName
+      Events:
+        PostTask:
+          Type: Api 
+          Properties:
+            Path: /task
+            Method: POST  
+
+  GetByIdFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./src/TaskAPI/
+      Handler: TaskAPI::TaskAPI.Functions.GetByIdFunction::FunctionHandler
+      Runtime: dotnetcore3.1
+      Architectures:
+        - x86_64
+      MemorySize: 256
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TaskTableName
+      Events:
+        PostTask:
+          Type: Api 
+          Properties:
+            Path: /task/{taskId}
+            Method: GET  
+            
+  Table:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: !Ref TaskTableName
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1         
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  TaskResource:
+    Description: "API Gateway endpoint URL for Prod stage for task resource"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/task/"
+  GetFunction:
+    Description: "Get Task Lambda Function ARN"
+    Value: !GetAtt GetFunction.Arn
