@@ -85,6 +85,10 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 
+### SAM-CLI ###
+.aws-sam/*
+
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
