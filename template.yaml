@@ -41,8 +41,6 @@ Resources:
       CodeUri: ./src/TaskAPI/
       Handler: TaskAPI::TaskAPI.Functions.GetFunction::FunctionHandler
       Runtime: dotnetcore3.1
-      Architectures:
-        - x86_64
       MemorySize: 256
       Policies:
         - DynamoDBCrudPolicy:
@@ -60,8 +58,6 @@ Resources:
       CodeUri: ./src/TaskAPI/
       Handler: TaskAPI::TaskAPI.Functions.PostFunction::FunctionHandler
       Runtime: dotnetcore3.1
-      Architectures:
-        - x86_64
       MemorySize: 256
       Policies:
         - DynamoDBCrudPolicy:
@@ -79,8 +75,6 @@ Resources:
       CodeUri: ./src/TaskAPI/
       Handler: TaskAPI::TaskAPI.Functions.GetByIdFunction::FunctionHandler
       Runtime: dotnetcore3.1
-      Architectures:
-        - x86_64
       MemorySize: 256
       Policies:
         - DynamoDBCrudPolicy:
