@@ -5,6 +5,7 @@ using Amazon.Lambda.Core;
 using TaskAPI.Model;
 using Newtonsoft.Json;
 using TaskAPI.DynamoDB;
+using TaskAPI.ViewModel;
 
 namespace TaskAPI.Functions
 {
@@ -20,13 +21,15 @@ namespace TaskAPI.Functions
         public async Task<APIGatewayProxyResponse> FunctionHandler(APIGatewayProxyRequest apiaProxyEvent, ILambdaContext context){
 
             Console.WriteLine("Task received");
-            var task = JsonConvert.DeserializeObject<TaskItem>(apiaProxyEvent.Body);
-            task.Id = Guid.NewGuid().ToString();
-            var validationResult =  task.Validate();
+            var createTask = JsonConvert.DeserializeObject<CreateTaskItemViewModel>(apiaProxyEvent.Body);
+            var taskValidationResult = new CreateTaskItemViewModelValidator().Validate(createTask);
 
-            if (validationResult.Count > 0){
-                return DefaultApiGatewayResponses.BadRequest(validationResult);
+            if (!taskValidationResult.IsValid){
+                return DefaultApiGatewayResponses.BadRequest(taskValidationResult);
             }
+
+            var task = createTask.MapTo();
+            task.Id = Guid.NewGuid().ToString();
 
             try{
                 await TaskRepository.Add(task);

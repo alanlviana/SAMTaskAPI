@@ -11,11 +11,13 @@ namespace TaskAPI
 {
     public class DefaultApiGatewayResponses
     {
-        public static APIGatewayProxyResponse BadRequest(List<ValidationResult> validationResult){
+        public static APIGatewayProxyResponse BadRequest(FluentValidation.Results.ValidationResult validationResult){
+
+            var errors = validationResult.Errors.Select(e => new{Field = e.PropertyName, Message=e.ErrorMessage});
             Console.WriteLine($"A bad request status code was returned.");
             return new APIGatewayProxyResponse
             {
-                Body = JsonConvert.SerializeObject(validationResult),
+                Body = JsonConvert.SerializeObject(errors),
                 StatusCode = 400,
                 Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
             };
