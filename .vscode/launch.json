@@ -15,7 +15,11 @@
             },
             "lambda": {
                 "payload": {},
-                "environmentVariables": {}
+                "environmentVariables": {
+                    "TABLE_NAME": "TaskTable",
+                    "REGION_NAME": "us-west-2",
+                    "AWS_ENV": "AWS_SAM_LOCAL"
+                }
             }
         },
         {
