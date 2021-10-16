@@ -64,6 +64,23 @@ namespace TaskAPI.DynamoDB
             };
         }
 
+
+
+        public async Task DeleteById(string taskId)
+        {
+            var response = await DDB.DeleteItemAsync(TableName, new Dictionary<string, AttributeValue>(){
+                {TASK_ID, new AttributeValue() {S = taskId}}
+            });
+
+            Console.WriteLine($"DeleteItemAsync return a {response.HttpStatusCode} status code");
+            
+            if (response.HttpStatusCode != System.Net.HttpStatusCode.OK){
+                Console.WriteLine($"DeleteItemAsync return a not OK status code: {response.HttpStatusCode}");
+                Console.WriteLine($"DeleteItemAsync response Metadata: {JsonConvert.SerializeObject(response.ResponseMetadata)}");
+                throw new Exception($"An internal server error occurred.");
+            }
+        }
+
         public async Task AddOrUpdate(TaskItem task){
             var item = new Dictionary<string, Amazon.DynamoDBv2.Model.AttributeValue>();
             item[TASK_ID] = new AttributeValue{ S = task.Id.ToString() };

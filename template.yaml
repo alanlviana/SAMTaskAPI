@@ -100,7 +100,23 @@ Resources:
           Type: Api 
           Properties:
             Path: /task/{taskId}
-            Method: PUT              
+            Method: PUT
+  DeleteByIdFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./src/TaskAPI/
+      Handler: TaskAPI::TaskAPI.Functions.DeleteByIdFunction::FunctionHandler
+      Runtime: dotnetcore3.1
+      MemorySize: 256
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TaskTableName
+      Events:
+        PostTask:
+          Type: Api 
+          Properties:
+            Path: /task/{taskId}
+            Method: DELETE                         
             
   Table:
     Type: AWS::Serverless::SimpleTable
