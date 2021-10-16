@@ -9,7 +9,7 @@ using TaskAPI.Model;
 
 namespace TaskAPI.DynamoDB
 {
-    public class TaskRepository
+    public class TaskRepository : ITaskRepository
     {
         private const string TASK_ID = "id";
         private const string TASK_DESCRIPTION = "description";
@@ -39,7 +39,7 @@ namespace TaskAPI.DynamoDB
             }
         }
 
-        public async Task<TaskItem> GetById(string taskId)
+        public async Task<TaskItem> GetByIdAsync(string taskId)
         {
             var response = await DDB.GetItemAsync(TableName, new Dictionary<string, AttributeValue>(){
                 {TASK_ID, new AttributeValue() {S = taskId}}
@@ -64,9 +64,7 @@ namespace TaskAPI.DynamoDB
             };
         }
 
-
-
-        public async Task DeleteById(string taskId)
+        public async Task DeleteByIdAsync(string taskId)
         {
             var response = await DDB.DeleteItemAsync(TableName, new Dictionary<string, AttributeValue>(){
                 {TASK_ID, new AttributeValue() {S = taskId}}
@@ -81,7 +79,7 @@ namespace TaskAPI.DynamoDB
             }
         }
 
-        public async Task AddOrUpdate(TaskItem task){
+        public async Task AddOrUpdateAsync(TaskItem task){
             var item = new Dictionary<string, Amazon.DynamoDBv2.Model.AttributeValue>();
             item[TASK_ID] = new AttributeValue{ S = task.Id.ToString() };
             item[TASK_DESCRIPTION] = new AttributeValue{ S = task.Description };
@@ -97,7 +95,7 @@ namespace TaskAPI.DynamoDB
             }
         }
 
-        public async Task<List<TaskItem>> GetAll(){
+        public async Task<List<TaskItem>> GetAllAsync(){
             
             var response = await DDB.ScanAsync(TableName, new List<String>{ TASK_ID, TASK_DESCRIPTION, TASK_DONE });
 

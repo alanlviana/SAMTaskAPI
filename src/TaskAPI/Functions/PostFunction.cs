@@ -34,7 +34,7 @@ namespace TaskAPI.Functions
             task.Done = false;
 
             try{
-                await TaskRepository.AddOrUpdate(task);
+                await TaskRepository.AddOrUpdateAsync(task);
             }catch(Exception exception){
                 return DefaultApiGatewayResponses.InternalError(exception);
             }

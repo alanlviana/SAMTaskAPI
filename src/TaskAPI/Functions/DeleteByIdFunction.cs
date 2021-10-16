@@ -23,8 +23,8 @@ namespace TaskAPI.Functions
             Console.WriteLine($"TaskId: {taskId}");
 
             try{
-                var task = await TaskRepository.GetById(taskId);
-                await TaskRepository.DeleteById(taskId);
+                var task = await TaskRepository.GetByIdAsync(taskId);
+                await TaskRepository.DeleteByIdAsync(taskId);
                 Console.WriteLine($"TaskItem ({taskId}) was deleted.");
                 return DefaultApiGatewayResponses.Ok(new{ Message= $"Task ({taskId}) was deleted."});
             }catch(ItemNotFoundException exception){

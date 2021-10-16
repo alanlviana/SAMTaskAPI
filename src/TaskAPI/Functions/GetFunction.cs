@@ -24,7 +24,7 @@ namespace TaskAPI.Functions
         public async Task<APIGatewayProxyResponse> FunctionHandler(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
         {
             try{
-                var taskList = await TaskRepository.GetAll();
+                var taskList = await TaskRepository.GetAllAsync();
                 var body = new Dictionary<string, object>
                 {
                     { "tasks", taskList }

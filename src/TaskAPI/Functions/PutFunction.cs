@@ -37,9 +37,9 @@ namespace TaskAPI.Functions
             }
 
             try{
-                var taskToUpdate = await TaskRepository.GetById(taskId);
+                var taskToUpdate = await TaskRepository.GetByIdAsync(taskId);
                 updateTask.MapTo(taskToUpdate);
-                await TaskRepository.AddOrUpdate(taskToUpdate);
+                await TaskRepository.AddOrUpdateAsync(taskToUpdate);
                 return DefaultApiGatewayResponses.Ok(taskToUpdate);
             }catch(ItemNotFoundException exception){
                 return DefaultApiGatewayResponses.NotFound(exception.Message);

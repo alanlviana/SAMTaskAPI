@@ -23,7 +23,7 @@ namespace TaskAPI.Functions
             Console.WriteLine($"TaskId: {taskId}");
 
             try{
-                var task = await TaskRepository.GetById(taskId);
+                var task = await TaskRepository.GetByIdAsync(taskId);
                 return DefaultApiGatewayResponses.Ok(task);
             }catch(ItemNotFoundException exception){
                 return DefaultApiGatewayResponses.NotFound(exception.Message);
