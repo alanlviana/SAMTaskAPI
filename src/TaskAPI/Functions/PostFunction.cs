@@ -6,6 +6,7 @@ using TaskAPI.Model;
 using Newtonsoft.Json;
 using TaskAPI.DynamoDB;
 using TaskAPI.ViewModel;
+using System.IO;
 
 namespace TaskAPI.Functions
 {
@@ -30,14 +31,16 @@ namespace TaskAPI.Functions
 
             var task = createTask.MapTo();
             task.Id = Guid.NewGuid().ToString();
+            task.Done = false;
 
             try{
                 await TaskRepository.Add(task);
             }catch(Exception exception){
                 return DefaultApiGatewayResponses.InternalError(exception);
             }
-            
-            return DefaultApiGatewayResponses.Created(task);
+
+            var location = Path.Combine(apiaProxyEvent.Headers["Host"], "task", task.Id);
+            return DefaultApiGatewayResponses.Created(task, location);
 
         }
     }

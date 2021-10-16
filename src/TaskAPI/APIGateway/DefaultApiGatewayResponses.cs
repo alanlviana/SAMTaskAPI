@@ -44,13 +44,16 @@ namespace TaskAPI
             };
         }
 
-        public static APIGatewayProxyResponse Created(Object objectCreated){
+        public static APIGatewayProxyResponse Created(Object objectCreated, String location){
             Console.WriteLine($"A created status code was returned.");
             return new APIGatewayProxyResponse
             {
                 Body = JsonConvert.SerializeObject(objectCreated),
                 StatusCode = 201,
-                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                Headers = new Dictionary<string, string> {
+                     { "Content-Type", "application/json" },
+                     { "Location", location },
+                }
             };
         }
 

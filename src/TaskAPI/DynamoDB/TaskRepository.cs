@@ -13,6 +13,7 @@ namespace TaskAPI.DynamoDB
     {
         private const string TASK_ID = "id";
         private const string TASK_DESCRIPTION = "description";
+        private const string TASK_DONE = "done";
         private readonly AmazonDynamoDBClient DDB;
         private readonly String TableName;
         private readonly String Region;
@@ -59,6 +60,7 @@ namespace TaskAPI.DynamoDB
             return new TaskItem(){
                 Id = response.Item[TASK_ID].S,
                 Description = response.Item[TASK_DESCRIPTION].S,
+                Done = response.Item[TASK_DONE].BOOL
             };
         }
 
@@ -66,6 +68,7 @@ namespace TaskAPI.DynamoDB
             var item = new Dictionary<string, Amazon.DynamoDBv2.Model.AttributeValue>();
             item[TASK_ID] = new AttributeValue{ S = task.Id.ToString() };
             item[TASK_DESCRIPTION] = new AttributeValue{ S = task.Description };
+            item[TASK_DONE] = new AttributeValue{ BOOL = task.Done };
             var response = await DDB.PutItemAsync(TableName, item);
             
             Console.WriteLine($"PutItemAsync return a {response.HttpStatusCode} status code");
@@ -94,6 +97,7 @@ namespace TaskAPI.DynamoDB
                 var taskItem = new TaskItem();
                 taskItem.Id = item[TASK_ID].S;
                 taskItem.Description = item[TASK_DESCRIPTION].S;
+                taskItem.Done = item[TASK_DONE].BOOL;
                 taskList.Add(taskItem);
             }
 
