@@ -64,7 +64,7 @@ namespace TaskAPI.DynamoDB
             };
         }
 
-        public async Task Add(TaskItem task){
+        public async Task AddOrUpdate(TaskItem task){
             var item = new Dictionary<string, Amazon.DynamoDBv2.Model.AttributeValue>();
             item[TASK_ID] = new AttributeValue{ S = task.Id.ToString() };
             item[TASK_DESCRIPTION] = new AttributeValue{ S = task.Description };
@@ -82,7 +82,7 @@ namespace TaskAPI.DynamoDB
 
         public async Task<List<TaskItem>> GetAll(){
             
-            var response = await DDB.ScanAsync(TableName, new List<String>{ TASK_ID, TASK_DESCRIPTION });
+            var response = await DDB.ScanAsync(TableName, new List<String>{ TASK_ID, TASK_DESCRIPTION, TASK_DONE });
 
             Console.WriteLine($"ScanAsync return a {response.HttpStatusCode} status code");
 
@@ -97,7 +97,7 @@ namespace TaskAPI.DynamoDB
                 var taskItem = new TaskItem();
                 taskItem.Id = item[TASK_ID].S;
                 taskItem.Description = item[TASK_DESCRIPTION].S;
-                taskItem.Done = item[TASK_DONE].BOOL;
+                taskItem.Done = item.ContainsKey(TASK_DONE) ? item[TASK_DONE].BOOL : false ; 
                 taskList.Add(taskItem);
             }
 

@@ -84,7 +84,23 @@ Resources:
           Type: Api 
           Properties:
             Path: /task/{taskId}
-            Method: GET  
+            Method: GET
+  PutFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./src/TaskAPI/
+      Handler: TaskAPI::TaskAPI.Functions.PutFunction::FunctionHandler
+      Runtime: dotnetcore3.1
+      MemorySize: 256
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TaskTableName
+      Events:
+        PostTask:
+          Type: Api 
+          Properties:
+            Path: /task/{taskId}
+            Method: PUT              
             
   Table:
     Type: AWS::Serverless::SimpleTable
