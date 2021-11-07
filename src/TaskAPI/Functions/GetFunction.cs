@@ -14,12 +14,7 @@ namespace TaskAPI.Functions
 
     public class GetFunction
     {
-        private readonly TaskRepository TaskRepository;
-
-        public GetFunction()
-        {
-            TaskRepository = new TaskRepository(); 
-        }
+        ITaskRepository TaskRepository = new TaskRepository();
         
         public async Task<APIGatewayProxyResponse> FunctionHandler(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
         {
@@ -31,7 +26,7 @@ namespace TaskAPI.Functions
                 };
                 return DefaultApiGatewayResponses.Ok(body);
             }catch(Exception exception){
-                return DefaultApiGatewayResponses.InternalError(exception);
+                return DefaultApiGatewayResponses.InternalServerError(exception);
             }
             
 

@@ -16,12 +16,7 @@ namespace TaskAPI.Functions
     {
         private const string TASK_ID = "taskId";
 
-        private readonly TaskRepository TaskRepository;
-        public PutFunction()
-        {
-            TaskRepository = new TaskRepository();
-        }
-
+        ITaskRepository TaskRepository = new TaskRepository();
 
         public async Task<APIGatewayProxyResponse> FunctionHandler(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context){
 
@@ -44,7 +39,7 @@ namespace TaskAPI.Functions
             }catch(ItemNotFoundException exception){
                 return DefaultApiGatewayResponses.NotFound(exception.Message);
             }catch(Exception exception){
-                return DefaultApiGatewayResponses.InternalError(exception);
+                return DefaultApiGatewayResponses.InternalServerError(exception);
             }
 
         }

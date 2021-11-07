@@ -10,12 +10,18 @@ namespace TaskAPI.Functions
     public class GetByIdFunction
     {
         private const string TASK_ID = "taskId";
-        private readonly TaskRepository TaskRepository;
+        private readonly ITaskRepository TaskRepository;
+
+        public GetByIdFunction(ITaskRepository taskRepository)
+        {
+            this.TaskRepository = taskRepository;
+        }
 
         public GetByIdFunction()
         {
-            TaskRepository = new TaskRepository();
+            this.TaskRepository = new TaskRepository();
         }
+
 
         public async Task<APIGatewayProxyResponse> FunctionHandler(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
         {
@@ -28,7 +34,7 @@ namespace TaskAPI.Functions
             }catch(ItemNotFoundException exception){
                 return DefaultApiGatewayResponses.NotFound(exception.Message);
             }catch(Exception exception){
-                return DefaultApiGatewayResponses.InternalError(exception);
+                return DefaultApiGatewayResponses.InternalServerError(exception);
             }
             
 

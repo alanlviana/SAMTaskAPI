@@ -23,7 +23,7 @@ namespace TaskAPI
             };
         }
 
-        public static APIGatewayProxyResponse InternalError(Exception e){
+        public static APIGatewayProxyResponse InternalServerError(Exception e){
             Console.WriteLine($"An internal error status code was returned. Exception Message: {e.Message}");
             return new APIGatewayProxyResponse
             {

@@ -12,12 +12,7 @@ namespace TaskAPI.Functions
 {
     public class PostFunction
     {
-        private readonly TaskRepository TaskRepository;
-
-        public PostFunction()
-        {
-            TaskRepository = new TaskRepository();
-        }
+        ITaskRepository TaskRepository = new TaskRepository();
 
         public async Task<APIGatewayProxyResponse> FunctionHandler(APIGatewayProxyRequest apiaProxyEvent, ILambdaContext context){
 
@@ -36,7 +31,7 @@ namespace TaskAPI.Functions
             try{
                 await TaskRepository.AddOrUpdateAsync(task);
             }catch(Exception exception){
-                return DefaultApiGatewayResponses.InternalError(exception);
+                return DefaultApiGatewayResponses.InternalServerError(exception);
             }
 
             var location = Path.Combine(apiaProxyEvent.Headers["Host"], "task", task.Id);

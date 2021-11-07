@@ -10,12 +10,8 @@ namespace TaskAPI.Functions
     public class DeleteByIdFunction
     {
         private const string TASK_ID = "taskId";
-        private readonly TaskRepository TaskRepository;
+        ITaskRepository TaskRepository = new TaskRepository();
 
-        public DeleteByIdFunction()
-        {
-            TaskRepository = new TaskRepository();
-        }
 
         public async Task<APIGatewayProxyResponse> FunctionHandler(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
         {
@@ -30,7 +26,7 @@ namespace TaskAPI.Functions
             }catch(ItemNotFoundException exception){
                 return DefaultApiGatewayResponses.NotFound(exception.Message);
             }catch(Exception exception){
-                return DefaultApiGatewayResponses.InternalError(exception);
+                return DefaultApiGatewayResponses.InternalServerError(exception);
             }
             
 
